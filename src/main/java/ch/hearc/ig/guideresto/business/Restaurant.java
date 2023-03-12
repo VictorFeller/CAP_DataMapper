@@ -74,4 +74,17 @@ public class Restaurant {
     public void setType(RestaurantType type) {
         this.type = type;
     }
+
+    @Override
+    public String toString() {
+        return "Restaurant{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", website='" + website + '\'' +
+                ", evaluations=" + evaluations +
+                ", address=" + address +
+                ", type=" + type +
+                '}';
+    }
 }

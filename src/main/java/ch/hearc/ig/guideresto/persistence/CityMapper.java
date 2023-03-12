@@ -10,16 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CityMapper {
-//    private static Connection cnn = null;
-
-//    public void openConnection() throws SQLException {
-//        cnn = new DBOracleDriverManager().getConnection();
-//    }
-
-
-
-    public List<City> findByNom(Connection cnn, String nom) throws SQLException {
-//        openConnection();
+    public static List<City> findByNom(Connection cnn, String nom)  {
         try (PreparedStatement prepareStatement = cnn.prepareStatement("SELECT NUMERO, CODE_POSTAL, NOM_VILLE FROM VILLES WHERE NOM_VILLE = ?")){
             prepareStatement.setString(1, nom);
             ResultSet resultSet = prepareStatement.executeQuery();
@@ -35,8 +26,7 @@ public class CityMapper {
         }
     }
 
-    public void insert(Connection cnn, City city) throws SQLException {
-//        openConnection();
+    public void insert(Connection cnn, City city) {
         try(PreparedStatement prepareStatement = cnn.prepareStatement("INSERT INTO VILLES (CODE_POSTAL, NOM_VILLE) VALUES (?,?)")) {
             prepareStatement.setString(1, city.getZipCode());
             prepareStatement.setString(2, city.getCityName());

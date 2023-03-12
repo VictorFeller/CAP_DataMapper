@@ -1,9 +1,8 @@
 package ch.hearc.ig.guideresto.application;
 
 import ch.hearc.ig.guideresto.business.City;
-import ch.hearc.ig.guideresto.persistence.CityMapper;
-import ch.hearc.ig.guideresto.persistence.DBOracleDriverManager;
-import ch.hearc.ig.guideresto.persistence.FakeItems;
+import ch.hearc.ig.guideresto.business.Restaurant;
+import ch.hearc.ig.guideresto.persistence.*;
 import ch.hearc.ig.guideresto.presentation.CLI;
 
 import java.sql.Connection;
@@ -21,13 +20,38 @@ public class Main {
 //    cli.start();
 
 
-    //Test insert City
+    /*//Test insert City
     Connection cnn = DBOracleDriverManager.getConnection();
 
     CityMapper cityMapper = new CityMapper();
     City city = new City(null, "2336", "Les Bois");
     cityMapper.insert(cnn, city);
     System.out.println(cityMapper.findByNom(cnn, "Le Noirmont"));
+
+    cnn.commit();
+
+    //Close connection
+    DBOracleDriverManager.closeConnection();*/
+
+
+    //Test select restaurant
+    Connection cnn = DBOracleDriverManager.getConnection();
+
+    RestaurantMapper restaurantMapper = new RestaurantMapper();
+
+    //Select du restaurant
+//    System.out.println(restaurantMapper.findByNom(cnn, "Fleur-de-Lys"));
+
+    Restaurant restaurant = new Restaurant(null,
+            "Wenger,",
+            "Resto gastro",
+            "https://wenger.ch",
+            "Rue de la gare 10",
+            CityMapper.findByNom(cnn, "Le Noirmont").get(0),
+            RestaurantTypeMapper.findByNom(cnn, "Restaurant gastronomique").get(0));
+
+    //Insertion du restaurant
+    restaurantMapper.insert(cnn, restaurant);
 
     cnn.commit();
 

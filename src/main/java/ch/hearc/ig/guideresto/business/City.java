@@ -28,6 +28,10 @@ public class City {
         return restaurants;
     }
 
+    public Integer getId() {
+        return id;
+    }
+
     @Override
     public String toString() {
         return "City{" +

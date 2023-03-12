@@ -28,4 +28,8 @@ public class RestaurantType {
     public Set<Restaurant> getRestaurants() {
         return restaurants;
     }
+
+    public Integer getId() {
+        return id;
+    }
 }
