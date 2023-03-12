@@ -10,31 +10,40 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CityMapper {
-    private static Connection cnn = null;
+//    private static Connection cnn = null;
 
-    public void openConnection() throws SQLException {
-        cnn = new DBOracleDriverManager().getConnection();
-    }
+//    public void openConnection() throws SQLException {
+//        cnn = new DBOracleDriverManager().getConnection();
+//    }
 
-    public void closeConnection() {
-        try {
-            cnn.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 
-    public List<City> findByNom(String nom) throws SQLException {
-        openConnection();
-        try (PreparedStatement prepareStatement = cnn.prepareStatement("SELECT NUMERO, CODE_POSTAL, NOM_VILLE FROM VILLES");
-                ResultSet resultSet = prepareStatement.executeQuery()) {
+
+    public List<City> findByNom(Connection cnn, String nom) throws SQLException {
+//        openConnection();
+        try (PreparedStatement prepareStatement = cnn.prepareStatement("SELECT NUMERO, CODE_POSTAL, NOM_VILLE FROM VILLES WHERE NOM_VILLE = ?")){
+            prepareStatement.setString(1, nom);
+            ResultSet resultSet = prepareStatement.executeQuery();
+
             List<City> cities = new ArrayList<>();
             while (resultSet.next()) {
                 cities.add(new City(resultSet.getInt("NUMERO"), resultSet.getString("CODE_POSTAL"), resultSet.getString("NOM_VILLE")));
             }
-            return cities;
+
+             return cities;
         } catch (SQLException e){
             throw new RuntimeException(e);
         }
     }
+
+    public void insert(Connection cnn, City city) throws SQLException {
+//        openConnection();
+        try(PreparedStatement prepareStatement = cnn.prepareStatement("INSERT INTO VILLES (CODE_POSTAL, NOM_VILLE) VALUES (?,?)")) {
+            prepareStatement.setString(1, city.getZipCode());
+            prepareStatement.setString(2, city.getCityName());
+            prepareStatement.executeQuery();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

@@ -27,4 +27,14 @@ public class City {
     public Set<Restaurant> getRestaurants() {
         return restaurants;
     }
+
+    @Override
+    public String toString() {
+        return "City{" +
+                "id=" + id +
+                ", zipCode='" + zipCode + '\'' +
+                ", cityName='" + cityName + '\'' +
+                ", restaurants=" + restaurants +
+                '}';
+    }
 }

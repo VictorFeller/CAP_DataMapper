@@ -12,7 +12,7 @@ public class DBOracleDriverManager {
     public static final String PASSWORD = "victor_feller";
     public static Connection cnn;
 
-    public Connection getConnection() throws SQLException {
+    public static Connection getConnection() throws SQLException {
         try{
             //Connection à la DB
             cnn = DriverManager.getConnection(URLDB, USER, PASSWORD);
@@ -22,6 +22,22 @@ public class DBOracleDriverManager {
             return cnn;
         } catch(Exception e){
             throw new SQLException();
+        }
+    }
+
+    public static void closeConnection() {
+        try {
+            cnn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void commit(){
+        try {
+            cnn.commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 }
