@@ -21,7 +21,7 @@ public class DBOracleDriverManager {
 
             return cnn;
         } catch(Exception e){
-            throw new SQLException();
+            throw new SQLException(e);
         }
     }
 

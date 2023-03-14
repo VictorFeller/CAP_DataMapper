@@ -7,9 +7,26 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class RestaurantMapper {
+    public Set<Restaurant> findAll(Connection cnn) throws SQLException {
+        try(PreparedStatement statement = cnn.prepareStatement("SELECT NUMERO, NOM, DESCRIPTION, SITE_WEB FROM RESTAURANTS")) {
+            ResultSet resultSet = statement.executeQuery();
+            Set<Restaurant> restaurants = new HashSet<>();
+            while(resultSet.next()) {
+                //TODO
+                // Comment recupérer les autres champs (la City par exemple?)? C'est un des objectifs de l'exercice
+                // Même question pour les évaluations
+                restaurants.add(new Restaurant(null, resultSet.getString("nom"), resultSet.getString("description"), resultSet.getString("site_web"), null, null, null));
+            }
+            return restaurants;
+        } catch(SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
     public List<Restaurant> findByNom(Connection cnn, String nom) {
         try (PreparedStatement prepareStatement = cnn.prepareStatement("SELECT NUMERO, NOM, ADRESSE, DESCRIPTION, SITE_WEB FROM RESTAURANTS WHERE NOM = ?")){
             prepareStatement.setString(1, nom);
@@ -26,7 +43,7 @@ public class RestaurantMapper {
         }
     }
 
-    public void insert(Connection cnn, Restaurant restaurant){
+    public void insert(Connection cnn, Restaurant restaurant) {
         try(PreparedStatement prepareStatement = cnn.prepareStatement("INSERT INTO RESTAURANTS (NOM, ADRESSE, DESCRIPTION, SITE_WEB, FK_TYPE, FK_VILL) VALUES (?,?, ?, ?, ?, ?)")) {
             prepareStatement.setString(1, restaurant.getName());
             prepareStatement.setString(2, restaurant.getStreet());
