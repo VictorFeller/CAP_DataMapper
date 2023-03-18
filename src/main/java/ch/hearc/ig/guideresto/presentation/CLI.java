@@ -11,6 +11,7 @@ import ch.hearc.ig.guideresto.business.EvaluationCriteria;
 import ch.hearc.ig.guideresto.business.Grade;
 import ch.hearc.ig.guideresto.business.Restaurant;
 import ch.hearc.ig.guideresto.business.RestaurantType;
+import ch.hearc.ig.guideresto.persistence.CityMapper;
 import ch.hearc.ig.guideresto.persistence.FakeItems;
 import ch.hearc.ig.guideresto.persistence.RestaurantMapper;
 import ch.hearc.ig.guideresto.persistence.RestaurantTypeMapper;
@@ -159,7 +160,7 @@ public class CLI {
       println("Veuillez entrer le nom de la nouvelle ville : ");
       String cityName = readString();
       City city = new City(1, zipCode, cityName);
-      fakeItems.getCities().add(city);
+      CityMapper.insert(city);
       return city;
     }
 
@@ -207,21 +208,21 @@ public class CLI {
     City city;
     do
     { // La sélection d'une ville est obligatoire, donc l'opération se répètera tant qu'aucune ville n'est sélectionnée.
-      Set<City> cities = fakeItems.getCities();
+      Set<City> cities = CityMapper.findAll();
       city = pickCity(cities);
     } while (city == null);
 
     RestaurantType restaurantType;
 
     // La sélection d'un type est obligatoire, donc l'opération se répètera tant qu'aucun type n'est sélectionné.
-    Set<RestaurantType> restaurantTypes = fakeItems.getRestaurantTypes();
+    Set<RestaurantType> restaurantTypes = RestaurantTypeMapper.findAll();
     restaurantType = pickRestaurantType(restaurantTypes);
 
     Restaurant restaurant = new Restaurant(null, name, description, website, street, city,
         restaurantType);
     city.getRestaurants().add(restaurant);
     restaurant.getAddress().setCity(city);
-    fakeItems.getAllRestaurants().add(restaurant);
+    RestaurantMapper.insert(restaurant);
 
     showRestaurant(restaurant);
   }
@@ -380,7 +381,7 @@ public class CLI {
     println("Nouvelle rue : ");
     restaurant.getAddress().setStreet(readString());
 
-    Set<City> cities = fakeItems.getCities();
+    Set<City> cities = CityMapper.findAll();
 
     City newCity = pickCity(cities);
     if (newCity.equals(restaurant.getAddress().getCity())) {

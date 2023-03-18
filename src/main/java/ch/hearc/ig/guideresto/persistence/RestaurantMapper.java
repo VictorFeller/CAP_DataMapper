@@ -34,8 +34,9 @@ public class RestaurantMapper {
         }
     }
 
-    public void insert(Connection cnn, Restaurant restaurant) {
-        try(PreparedStatement prepareStatement = cnn.prepareStatement("INSERT INTO RESTAURANTS (NOM, ADRESSE, DESCRIPTION, SITE_WEB, FK_TYPE, FK_VILL) VALUES (?,?, ?, ?, ?, ?)")) {
+    public static void insert(Restaurant restaurant) {
+        try(Connection cnn = DBOracleDriverManager.getConnection();
+            PreparedStatement prepareStatement = cnn.prepareStatement("INSERT INTO RESTAURANTS (NOM, ADRESSE, DESCRIPTION, SITE_WEB, FK_TYPE, FK_VILL) VALUES (?,?, ?, ?, ?, ?)")) {
             prepareStatement.setString(1, restaurant.getName());
             prepareStatement.setString(2, restaurant.getStreet());
             prepareStatement.setString(3, restaurant.getDescription());
