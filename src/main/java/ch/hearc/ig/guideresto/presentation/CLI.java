@@ -161,7 +161,7 @@ public class CLI {
       String cityName = readString();
       City city = new City(1, zipCode, cityName);
       CityMapper.insert(city);
-      return city;
+      return CityMapper.findByZipAndName(zipCode, cityName);
     }
 
     return searchCityByZipCode(cities, choice).orElseGet(() -> pickCity(cities));
