@@ -20,7 +20,7 @@ public class RestaurantMapper {
                 //TODO
                 // Comment recupérer le champ evaluations
                 restaurants.add(new Restaurant(
-                        null,
+                        resultSet.getInt("NUMERO"),
                         resultSet.getString("nom"),
                         resultSet.getString("description"),
                         resultSet.getString("site_web"),
