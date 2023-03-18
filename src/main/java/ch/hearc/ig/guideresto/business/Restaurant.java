@@ -66,6 +66,9 @@ public class Restaurant {
     public Localisation getAddress() {
         return address;
     }
+    public void setAddress(Localisation address) {
+        this.address = address;
+    }
 
     public RestaurantType getType() {
         return type;

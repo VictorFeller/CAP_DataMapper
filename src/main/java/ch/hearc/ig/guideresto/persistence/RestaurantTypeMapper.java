@@ -6,23 +6,21 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class RestaurantTypeMapper {
+    private static final String QUERY_BY_NUMERO = "SELECT NUMERO, LIBELLE, DESCRIPTION FROM TYPES_GASTRONOMIQUES WHERE NUMERO = ?";
 
-    public static List<RestaurantType> findByNom(Connection cnn, String libelle) {
-        try (PreparedStatement prepareStatement = cnn.prepareStatement("SELECT NUMERO, LIBELLE, DESCRIPTION FROM TYPES_GASTRONOMIQUES WHERE LIBELLE = ?")){
-            prepareStatement.setString(1, libelle);
+    public static RestaurantType findByNumero(int restaurantTypeNumero) {
+        try(Connection cnn = DBOracleDriverManager.getConnection();
+            PreparedStatement prepareStatement = cnn.prepareStatement(QUERY_BY_NUMERO)) {
+            prepareStatement.setInt(1, restaurantTypeNumero);
             ResultSet resultSet = prepareStatement.executeQuery();
-
-            List<RestaurantType> restaurantTypes = new ArrayList<>();
-            while (resultSet.next()) {
-                restaurantTypes.add(new RestaurantType(resultSet.getInt("NUMERO"), resultSet.getString("LIBELLE"), resultSet.getString("DESCRIPTION")));
+            RestaurantType restaurantType = null;
+            while(resultSet.next()) {
+                restaurantType = new RestaurantType(resultSet.getInt("NUMERO"), resultSet.getString("LIBELLE"), resultSet.getString("DESCRIPTION"));
             }
-
-            return restaurantTypes;
-        } catch (SQLException e){
+            return restaurantType;
+        } catch(SQLException e) {
             throw new RuntimeException(e);
         }
     }

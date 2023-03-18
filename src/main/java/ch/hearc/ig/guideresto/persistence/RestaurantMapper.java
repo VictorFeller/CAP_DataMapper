@@ -6,39 +6,30 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class RestaurantMapper {
-    public Set<Restaurant> findAll(Connection cnn) throws SQLException {
-        try(PreparedStatement statement = cnn.prepareStatement("SELECT NUMERO, NOM, DESCRIPTION, SITE_WEB FROM RESTAURANTS")) {
+    private static final String QUERY_ALL = "SELECT NUMERO, NOM, ADRESSE, DESCRIPTION, SITE_WEB, FK_TYPE, FK_VILL FROM RESTAURANTS";
+    public static Set<Restaurant> findAll() {
+        try(Connection cnn = DBOracleDriverManager.getConnection();
+                PreparedStatement statement = cnn.prepareStatement(QUERY_ALL)) {
             ResultSet resultSet = statement.executeQuery();
             Set<Restaurant> restaurants = new HashSet<>();
             while(resultSet.next()) {
                 //TODO
-                // Comment recupérer les autres champs (la City par exemple?)? C'est un des objectifs de l'exercice
-                // Même question pour les évaluations
-                restaurants.add(new Restaurant(null, resultSet.getString("nom"), resultSet.getString("description"), resultSet.getString("site_web"), null, null, null));
+                // Comment recupérer le champ evaluations
+                restaurants.add(new Restaurant(
+                        null,
+                        resultSet.getString("nom"),
+                        resultSet.getString("description"),
+                        resultSet.getString("site_web"),
+                        resultSet.getString("adresse"),
+                        CityMapper.findByNumero(resultSet.getInt("FK_VILL")),
+                        RestaurantTypeMapper.findByNumero(resultSet.getInt("FK_TYPE"))));
             }
             return restaurants;
         } catch(SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-    public List<Restaurant> findByNom(Connection cnn, String nom) {
-        try (PreparedStatement prepareStatement = cnn.prepareStatement("SELECT NUMERO, NOM, ADRESSE, DESCRIPTION, SITE_WEB FROM RESTAURANTS WHERE NOM = ?")){
-            prepareStatement.setString(1, nom);
-            ResultSet resultSet = prepareStatement.executeQuery();
-
-            List<Restaurant> restaurants = new ArrayList<>();
-            while (resultSet.next()) {
-                restaurants.add(new Restaurant(resultSet.getInt("NUMERO"), resultSet.getString("NOM"), resultSet.getString("DESCRIPTION"), null, null, null, null));
-            }
-
-             return restaurants;
-        } catch (SQLException e){
             throw new RuntimeException(e);
         }
     }

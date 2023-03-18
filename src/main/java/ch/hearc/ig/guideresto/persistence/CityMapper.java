@@ -6,21 +6,19 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class CityMapper {
-    public static List<City> findByNom(Connection cnn, String nom)  {
-        try (PreparedStatement prepareStatement = cnn.prepareStatement("SELECT NUMERO, CODE_POSTAL, NOM_VILLE FROM VILLES WHERE NOM_VILLE = ?")){
-            prepareStatement.setString(1, nom);
+    public static City findByNumero(int cityNumero)  {
+        try (Connection cnn = DBOracleDriverManager.getConnection();
+             PreparedStatement prepareStatement = cnn.prepareStatement("SELECT NUMERO, CODE_POSTAL, NOM_VILLE FROM VILLES WHERE NUMERO = ?")){
+            prepareStatement.setInt(1, cityNumero);
             ResultSet resultSet = prepareStatement.executeQuery();
-
-            List<City> cities = new ArrayList<>();
+            City city = null;
             while (resultSet.next()) {
-                cities.add(new City(resultSet.getInt("NUMERO"), resultSet.getString("CODE_POSTAL"), resultSet.getString("NOM_VILLE")));
+                city = new City(resultSet.getInt("NUMERO"), resultSet.getString("CODE_POSTAL"), resultSet.getString("NOM_VILLE"));
             }
 
-             return cities;
+             return city;
         } catch (SQLException e){
             throw new RuntimeException(e);
         }
