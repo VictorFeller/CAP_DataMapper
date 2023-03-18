@@ -134,7 +134,7 @@ public class CLI {
     println("Veuillez entrer une partie du nom de la ville désirée : ");
     String research = readString();
 
-    Set<Restaurant> restaurants = fakeItems.getAllRestaurants()
+    Set<Restaurant> restaurants = RestaurantMapper.findAll()
         .stream()
         .filter(r -> r.getAddress().getCity().getCityName().toUpperCase().contains(research.toUpperCase()))
         .collect(toUnmodifiableSet());
