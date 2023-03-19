@@ -333,16 +333,18 @@ public class CLI {
 
     CompleteEvaluation eval = new CompleteEvaluation(null, LocalDate.now(), restaurant, comment,
         username);
-    restaurant.getEvaluations().add(eval);
+    CompleteEvaluationMapper.insert(eval);
 
     println("Veuillez svp donner une note entre 1 et 5 pour chacun de ces critères : ");
 
+//    Set<EvaluationCriteria> evaluationCriterias = fakeItems.getEvaluationCriterias();
     Set<EvaluationCriteria> evaluationCriterias = fakeItems.getEvaluationCriterias();
 
     evaluationCriterias.forEach(currentCriteria -> {
       println(currentCriteria.getName() + " : " + currentCriteria.getDescription());
       Integer note = readInt();
       Grade grade = new Grade(null, note, eval, currentCriteria);
+//      eval.getGrades().add(grade);
       eval.getGrades().add(grade);
     });
 

@@ -28,7 +28,10 @@ public class RestaurantMapper {
                         CityMapper.findByNumero(resultSet.getInt("FK_VILL")),
                         RestaurantTypeMapper.findByNumero(resultSet.getInt("FK_TYPE")));
                 //Ajouter les evaluations
-                restaurant.setEvaluations(BasicEvaluationMapper.findByRestaurantNumero(restaurant));
+                restaurant.getEvaluations().addAll(BasicEvaluationMapper.findByRestaurantNumero(restaurant));
+                restaurant.getEvaluations().addAll(CompleteEvaluationMapper.findByRestaurantNumero(restaurant));
+
+
 
                 restaurants.add(restaurant);
             }
