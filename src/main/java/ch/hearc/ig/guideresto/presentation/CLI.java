@@ -107,7 +107,6 @@ public class CLI {
   private void showRestaurantsList() {
     println("Liste des restaurants : ");
 
-//    Set<Restaurant> restaurants = fakeItems.getAllRestaurants();
     Set<Restaurant> restaurants = RestaurantMapper.findAll();
 
     Optional<Restaurant> maybeRestaurant = pickRestaurant(restaurants);
@@ -160,6 +159,7 @@ public class CLI {
       println("Veuillez entrer le nom de la nouvelle ville : ");
       String cityName = readString();
       City city = new City(1, zipCode, cityName);
+
       CityMapper.insert(city);
       return CityMapper.findByZipAndName(zipCode, cityName);
     }
@@ -363,7 +363,7 @@ public class CLI {
     restaurant.setWebsite(readString());
     println("Nouveau type de restaurant : ");
 
-    Set<RestaurantType> restaurantTypes = fakeItems.getRestaurantTypes();
+    Set<RestaurantType> restaurantTypes = RestaurantTypeMapper.findAll();
 
     RestaurantType newType = pickRestaurantType(restaurantTypes);
     if (newType != restaurant.getType()) {
@@ -372,23 +372,31 @@ public class CLI {
       restaurant.setType(newType);
     }
 
+    //Update en DB
+    RestaurantMapper.update(restaurant);
+
     println("Merci, le restaurant a bien été modifié !");
   }
 
   private void editRestaurantAddress(Restaurant restaurant) {
     println("Edition de l'adresse d'un restaurant !");
 
+    //set la nouvelle rue au restaurant
     println("Nouvelle rue : ");
     restaurant.getAddress().setStreet(readString());
 
+
     Set<City> cities = CityMapper.findAll();
 
+    //Retourne une City en fonction d'un code postal existant ou d'une NEW city
     City newCity = pickCity(cities);
-    if (newCity.equals(restaurant.getAddress().getCity())) {
+    if (!newCity.equals(restaurant.getAddress().getCity())) {
       restaurant.getAddress().getCity().getRestaurants().remove(restaurant);
-      newCity.getRestaurants().add(restaurant);
-      restaurant.getAddress().setCity(newCity);
+      newCity.getRestaurants().add(restaurant); //Set le nouveau restaurant à la ville
+      restaurant.getAddress().setCity(newCity); //set la ville du restaurant
     }
+
+    RestaurantMapper.update(restaurant);
 
     println("L'adresse a bien été modifiée ! Merci !");
   }

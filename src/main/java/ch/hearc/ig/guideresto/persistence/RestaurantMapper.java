@@ -50,4 +50,20 @@ public class RestaurantMapper {
         }
     }
 
+    public static void update(Restaurant restaurant) {
+        try(Connection cnn = DBOracleDriverManager.getConnection();
+            PreparedStatement prepareStatement = cnn.prepareStatement("UPDATE RESTAURANTS SET NOM = ?, ADRESSE = ?, DESCRIPTION = ?, SITE_WEB  = ?, FK_TYPE = ?, FK_VILL = ? WHERE NUMERO = ?")) {
+            prepareStatement.setString(1, restaurant.getName());
+            prepareStatement.setString(2, restaurant.getStreet());
+            prepareStatement.setString(3, restaurant.getDescription());
+            prepareStatement.setString(4, restaurant.getWebsite());
+            prepareStatement.setInt(5, restaurant.getType().getId());
+            prepareStatement.setInt(6, restaurant.getAddress().getCity().getId());
+            prepareStatement.setInt(7, restaurant.getId());
+
+            prepareStatement.executeQuery();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

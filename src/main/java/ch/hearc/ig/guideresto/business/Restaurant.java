@@ -23,6 +23,10 @@ public class Restaurant {
         this.type = type;
     }
 
+    public Integer getId() {
+        return id;
+    }
+
     public String getName() {
         return name;
     }
