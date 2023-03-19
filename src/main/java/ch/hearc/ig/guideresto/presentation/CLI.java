@@ -407,7 +407,7 @@ public class CLI {
     if ("o".equalsIgnoreCase(choice)) {
       restaurant.getAddress().getCity().getRestaurants().remove(restaurant);
       restaurant.getType().getRestaurants().remove(restaurant);
-      fakeItems.getAllRestaurants().remove(restaurant);
+      RestaurantMapper.remove(restaurant);
       println("Le restaurant a bien été supprimé !");
     }
   }

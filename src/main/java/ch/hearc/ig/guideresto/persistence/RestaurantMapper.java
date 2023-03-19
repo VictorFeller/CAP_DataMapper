@@ -66,4 +66,19 @@ public class RestaurantMapper {
             throw new RuntimeException(e);
         }
     }
+
+    public static void remove(Restaurant restaurant) {
+        try(Connection cnn = DBOracleDriverManager.getConnection();
+            PreparedStatement prepareStatement = cnn.prepareStatement("DELETE FROM RESTAURANTS WHERE NUMERO = ?")) {
+            prepareStatement.setInt(1, restaurant.getId());
+
+            //TODO remove commentaires et likes à cause des FK
+//            CompleteEvaluation.remove(restaurant);
+//            BasicEvaluation.remove(restaurant);
+
+            prepareStatement.executeQuery();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
