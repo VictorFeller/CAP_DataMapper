@@ -1,5 +1,6 @@
 package ch.hearc.ig.guideresto.business;
 
+//Correspond à la table CRITERES_EVALUATION
 public class EvaluationCriteria {
 
     private Integer id;

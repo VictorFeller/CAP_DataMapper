@@ -11,10 +11,7 @@ import ch.hearc.ig.guideresto.business.EvaluationCriteria;
 import ch.hearc.ig.guideresto.business.Grade;
 import ch.hearc.ig.guideresto.business.Restaurant;
 import ch.hearc.ig.guideresto.business.RestaurantType;
-import ch.hearc.ig.guideresto.persistence.CityMapper;
-import ch.hearc.ig.guideresto.persistence.FakeItems;
-import ch.hearc.ig.guideresto.persistence.RestaurantMapper;
-import ch.hearc.ig.guideresto.persistence.RestaurantTypeMapper;
+import ch.hearc.ig.guideresto.persistence.*;
 
 import java.io.PrintStream;
 import java.net.Inet4Address;
@@ -296,7 +293,7 @@ public class CLI {
         addBasicEvaluation(restaurant, false);
         break;
       case 3:
-        evaluateRestaurant(restaurant);
+        evaluateRestaurant(restaurant); //TODO
         break;
       case 4:
         editRestaurant(restaurant);
@@ -315,7 +312,7 @@ public class CLI {
 
   private void addBasicEvaluation(Restaurant restaurant, Boolean like) {
     BasicEvaluation eval = new BasicEvaluation(null, LocalDate.now(), restaurant, like, getIpAddress());
-    restaurant.getEvaluations().add(eval);
+    BasicEvaluationMapper.insert(eval);
     println("Votre vote a été pris en compte !");
   }
 

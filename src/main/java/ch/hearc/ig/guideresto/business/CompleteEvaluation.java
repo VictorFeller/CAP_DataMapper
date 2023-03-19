@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
+//Correspond à la table COMMENTAIRES
 public class CompleteEvaluation extends Evaluation {
 
   private String comment;

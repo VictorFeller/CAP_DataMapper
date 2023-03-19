@@ -1,5 +1,6 @@
 package ch.hearc.ig.guideresto.business;
 
+//Correspond à la table NOTES
 public class Grade {
 
     private Integer id;

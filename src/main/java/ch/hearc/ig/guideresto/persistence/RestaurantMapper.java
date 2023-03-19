@@ -19,14 +19,18 @@ public class RestaurantMapper {
             while(resultSet.next()) {
                 //TODO
                 // Comment recupérer le champ evaluations
-                restaurants.add(new Restaurant(
+                Restaurant restaurant = new Restaurant(
                         resultSet.getInt("NUMERO"),
                         resultSet.getString("nom"),
                         resultSet.getString("description"),
                         resultSet.getString("site_web"),
                         resultSet.getString("adresse"),
                         CityMapper.findByNumero(resultSet.getInt("FK_VILL")),
-                        RestaurantTypeMapper.findByNumero(resultSet.getInt("FK_TYPE"))));
+                        RestaurantTypeMapper.findByNumero(resultSet.getInt("FK_TYPE")));
+                //Ajouter les evaluations
+                restaurant.setEvaluations(BasicEvaluationMapper.findByRestaurantNumero(restaurant));
+
+                restaurants.add(restaurant);
             }
             return restaurants;
         } catch(SQLException e) {

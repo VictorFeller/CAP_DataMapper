@@ -13,4 +13,12 @@ public abstract class Evaluation {
     this.visitDate = visitDate;
     this.restaurant = restaurant;
   }
+
+  public LocalDate getVisitDate() {
+    return visitDate;
+  }
+
+  public Restaurant getRestaurant() {
+    return restaurant;
+  }
 }

@@ -2,6 +2,7 @@ package ch.hearc.ig.guideresto.business;
 
 import java.time.LocalDate;
 
+//Correspond à la table LIKES
 public class BasicEvaluation extends Evaluation {
 
   private boolean likeRestaurant;
@@ -18,4 +19,7 @@ public class BasicEvaluation extends Evaluation {
     return likeRestaurant;
   }
 
+  public String getIpAddress() {
+    return ipAddress;
+  }
 }
