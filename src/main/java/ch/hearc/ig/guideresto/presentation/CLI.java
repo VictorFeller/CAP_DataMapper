@@ -212,7 +212,10 @@ public class CLI {
         restaurantType);
     city.getRestaurants().add(restaurant);
     restaurant.getAddress().setCity(city);
-    RestaurantMapper.insert(restaurant);
+    int idLastRestaurant = RestaurantMapper.insert(restaurant);
+
+    //Mettre à jour l'id du restaurant
+    restaurant.setId(idLastRestaurant);
 
     showRestaurant(restaurant);
   }
