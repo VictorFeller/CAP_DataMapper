@@ -20,4 +20,8 @@ public class EvaluationCriteria {
     public String getDescription() {
         return description;
     }
+
+    public Integer getId() {
+        return id;
+    }
 }

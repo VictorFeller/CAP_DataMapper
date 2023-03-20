@@ -21,4 +21,12 @@ public abstract class Evaluation {
   public Restaurant getRestaurant() {
     return restaurant;
   }
+
+  public Integer getId() {
+    return id;
+  }
+
+  public void setId(Integer id) {
+    this.id = id;
+  }
 }

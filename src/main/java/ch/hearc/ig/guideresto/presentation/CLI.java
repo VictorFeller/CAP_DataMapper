@@ -1,16 +1,6 @@
 package ch.hearc.ig.guideresto.presentation;
 
-import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toUnmodifiableSet;
-
-import ch.hearc.ig.guideresto.business.BasicEvaluation;
-import ch.hearc.ig.guideresto.business.City;
-import ch.hearc.ig.guideresto.business.CompleteEvaluation;
-import ch.hearc.ig.guideresto.business.Evaluation;
-import ch.hearc.ig.guideresto.business.EvaluationCriteria;
-import ch.hearc.ig.guideresto.business.Grade;
-import ch.hearc.ig.guideresto.business.Restaurant;
-import ch.hearc.ig.guideresto.business.RestaurantType;
+import ch.hearc.ig.guideresto.business.*;
 import ch.hearc.ig.guideresto.persistence.*;
 
 import java.io.PrintStream;
@@ -21,6 +11,9 @@ import java.util.InputMismatchException;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.Set;
+
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toUnmodifiableSet;
 
 public class CLI {
 
@@ -293,7 +286,7 @@ public class CLI {
         addBasicEvaluation(restaurant, false);
         break;
       case 3:
-        evaluateRestaurant(restaurant); //TODO
+        evaluateRestaurant(restaurant);
         break;
       case 4:
         editRestaurant(restaurant);
@@ -333,19 +326,23 @@ public class CLI {
 
     CompleteEvaluation eval = new CompleteEvaluation(null, LocalDate.now(), restaurant, comment,
         username);
-    CompleteEvaluationMapper.insert(eval);
+    restaurant.getEvaluations().add(eval);
+
+    int idLastEval = CompleteEvaluationMapper.insert(eval);
+
+    //Mettre à jour l'id de l'eval
+    eval.setId(idLastEval);
 
     println("Veuillez svp donner une note entre 1 et 5 pour chacun de ces critères : ");
 
-//    Set<EvaluationCriteria> evaluationCriterias = fakeItems.getEvaluationCriterias();
-    Set<EvaluationCriteria> evaluationCriterias = fakeItems.getEvaluationCriterias();
+    Set<EvaluationCriteria> evaluationCriterias = EvaluationCriteriaMapper.findAll();
 
     evaluationCriterias.forEach(currentCriteria -> {
       println(currentCriteria.getName() + " : " + currentCriteria.getDescription());
       Integer note = readInt();
       Grade grade = new Grade(null, note, eval, currentCriteria);
-//      eval.getGrades().add(grade);
       eval.getGrades().add(grade);
+      GradeMapper.insert(grade);
     });
 
     println("Votre évaluation a bien été enregistrée, merci !");
