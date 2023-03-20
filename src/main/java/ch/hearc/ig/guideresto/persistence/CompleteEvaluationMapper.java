@@ -13,6 +13,8 @@ import java.util.Set;
 public class CompleteEvaluationMapper {
     public static final String QUERY_BY_RESTAURANT_NUMERO = "SELECT NUMERO, DATE_EVAL, COMMENTAIRE, NOM_UTILISATEUR, FK_REST FROM COMMENTAIRES WHERE FK_REST = ?";
     public static final String QUERY_INSERT = "INSERT INTO COMMENTAIRES (DATE_EVAL, COMMENTAIRE, NOM_UTILISATEUR, FK_REST) VALUES (?, ?, ?, ?) RETURNING NUMERO INTO ?";
+    public static final String QUERY_DELETE = "DELETE FROM COMMENTAIRES WHERE FK_REST = ?";
+
     public static Set<Evaluation> findByRestaurantNumero(Restaurant restaurant) {
         try (Connection cnn = DBOracleDriverManager.getConnection();
              PreparedStatement prepareStatement = cnn.prepareStatement(QUERY_BY_RESTAURANT_NUMERO)){
@@ -53,6 +55,16 @@ public class CompleteEvaluationMapper {
             }
             return 0;
 
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void remove(Restaurant restaurant) {
+        try(Connection cnn = DBOracleDriverManager.getConnection();
+            PreparedStatement prepareStatement = cnn.prepareStatement(QUERY_DELETE)) {
+            prepareStatement.setInt(1, restaurant.getId());
+            prepareStatement.executeQuery();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

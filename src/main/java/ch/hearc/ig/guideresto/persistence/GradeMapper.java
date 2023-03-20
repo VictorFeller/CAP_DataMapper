@@ -13,6 +13,7 @@ import java.util.Set;
 public class GradeMapper {
     private static final String QUERY_ALL = "SELECT NUMERO, NOTE, FK_COMM, FK_CRIT FROM NOTES WHERE FK_COMM = ?";
     public static final String QUERY_INSERT = "INSERT INTO NOTES (NOTE, FK_COMM, FK_CRIT) VALUES (?,?, ?)";
+    public static final String QUERY_DELETE = "DELETE FROM NOTES WHERE FK_COMM = ?";
 
     public static void insert(Grade grade) {
         try(Connection cnn = DBOracleDriverManager.getConnection();
@@ -41,6 +42,17 @@ public class GradeMapper {
 
             }
             return grades;
+        } catch(SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void remove(Integer evaluationNumero) {
+        try (Connection cnn = DBOracleDriverManager.getConnection();
+             PreparedStatement pStmt = cnn.prepareStatement(QUERY_DELETE)) {
+            pStmt.setInt(1, evaluationNumero);
+            pStmt.executeUpdate();
+            cnn.commit();
         } catch(SQLException e) {
             throw new RuntimeException(e);
         }

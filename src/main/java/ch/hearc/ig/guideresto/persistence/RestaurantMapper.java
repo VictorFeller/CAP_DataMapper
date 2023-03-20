@@ -1,5 +1,6 @@
 package ch.hearc.ig.guideresto.persistence;
 
+import ch.hearc.ig.guideresto.business.Evaluation;
 import ch.hearc.ig.guideresto.business.Restaurant;
 
 import java.sql.Connection;
@@ -11,6 +12,8 @@ import java.util.Set;
 
 public class RestaurantMapper {
     private static final String QUERY_ALL = "SELECT NUMERO, NOM, ADRESSE, DESCRIPTION, SITE_WEB, FK_TYPE, FK_VILL FROM RESTAURANTS";
+    public static final String QUERY_DELETE = "DELETE FROM RESTAURANTS WHERE NUMERO = ?";
+
     public static Set<Restaurant> findAll() {
         try(Connection cnn = DBOracleDriverManager.getConnection();
                 PreparedStatement statement = cnn.prepareStatement(QUERY_ALL)) {
@@ -75,14 +78,16 @@ public class RestaurantMapper {
     }
 
     public static void remove(Restaurant restaurant) {
+        for (Evaluation eval : restaurant.getEvaluations()) {
+            GradeMapper.remove(eval.getId());
+        }
+
+        CompleteEvaluationMapper.remove(restaurant);
+        BasicEvaluationMapper.remove(restaurant);
+
         try(Connection cnn = DBOracleDriverManager.getConnection();
-            PreparedStatement prepareStatement = cnn.prepareStatement("DELETE FROM RESTAURANTS WHERE NUMERO = ?")) {
+            PreparedStatement prepareStatement = cnn.prepareStatement(QUERY_DELETE)) {
             prepareStatement.setInt(1, restaurant.getId());
-
-            //TODO remove commentaires et likes à cause des FK
-//            CompleteEvaluation.remove(restaurant);
-//            BasicEvaluation.remove(restaurant);
-
             prepareStatement.executeQuery();
         } catch (SQLException e) {
             throw new RuntimeException(e);

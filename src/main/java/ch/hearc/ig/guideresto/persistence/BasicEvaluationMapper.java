@@ -11,6 +11,8 @@ import java.util.Set;
 public class BasicEvaluationMapper {
     public static final String QUERY_BY_RESTAURANT_NUMERO = "SELECT NUMERO, APPRECIATION, DATE_EVAL, ADRESSE_IP, FK_REST FROM LIKES WHERE FK_REST = ?";
     public static final String QUERY_INSERT = "INSERT INTO LIKES (APPRECIATION, DATE_EVAL, ADRESSE_IP, FK_REST) VALUES (?, ?, ?, ?)";
+    public static final String QUERY_DELETE = "DELETE FROM LIKES WHERE FK_REST = ?";
+
 
     public static void insert(BasicEvaluation basicEvaluation) {
         try(Connection cnn = DBOracleDriverManager.getConnection();
@@ -43,6 +45,16 @@ public class BasicEvaluationMapper {
 
             return basicEvaluation;
         } catch (SQLException e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void remove(Restaurant restaurant) {
+        try(Connection cnn = DBOracleDriverManager.getConnection();
+            PreparedStatement prepareStatement = cnn.prepareStatement(QUERY_DELETE)) {
+            prepareStatement.setInt(1, restaurant.getId());
+            prepareStatement.executeQuery();
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
