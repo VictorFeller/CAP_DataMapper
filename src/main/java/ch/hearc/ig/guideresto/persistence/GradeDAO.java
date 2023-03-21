@@ -10,7 +10,7 @@ import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
 
-public class GradeMapper {
+public class GradeDAO {
     private static final String QUERY_ALL = "SELECT NUMERO, NOTE, FK_COMM, FK_CRIT FROM NOTES WHERE FK_COMM = ?";
     public static final String QUERY_INSERT = "INSERT INTO NOTES (NOTE, FK_COMM, FK_CRIT) VALUES (?,?, ?)";
     public static final String QUERY_DELETE = "DELETE FROM NOTES WHERE FK_COMM = ?";
@@ -38,7 +38,7 @@ public class GradeMapper {
                         resultSet.getInt("NUMERO"),
                         resultSet.getInt("NOTE"),
                         eval,
-                        EvaluationCriteriaMapper.findById(resultSet.getInt("FK_CRIT"))));
+                        EvaluationCriteriaDAO.findById(resultSet.getInt("FK_CRIT"))));
 
             }
             return grades;

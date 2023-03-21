@@ -10,7 +10,7 @@ import java.sql.*;
 import java.util.HashSet;
 import java.util.Set;
 
-public class CompleteEvaluationMapper {
+public class CompleteEvaluationDAO {
     public static final String QUERY_BY_RESTAURANT_NUMERO = "SELECT NUMERO, DATE_EVAL, COMMENTAIRE, NOM_UTILISATEUR, FK_REST FROM COMMENTAIRES WHERE FK_REST = ?";
     public static final String QUERY_INSERT = "INSERT INTO COMMENTAIRES (DATE_EVAL, COMMENTAIRE, NOM_UTILISATEUR, FK_REST) VALUES (?, ?, ?, ?) RETURNING NUMERO INTO ?";
     public static final String QUERY_DELETE = "DELETE FROM COMMENTAIRES WHERE FK_REST = ?";
@@ -28,7 +28,7 @@ public class CompleteEvaluationMapper {
                         restaurant,
                         resultSet.getString("COMMENTAIRE"),
                         resultSet.getString("NOM_UTILISATEUR"));
-                completeEvaluation.getGrades().addAll(GradeMapper.findAllById(completeEvaluation));
+                completeEvaluation.getGrades().addAll(GradeDAO.findAllById(completeEvaluation));
                 completeEvaluations.add(completeEvaluation);
             }
 

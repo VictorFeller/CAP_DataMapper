@@ -12,7 +12,7 @@ import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
 
-public class RestaurantMapper {
+public class RestaurantDAO {
     private static final String QUERY_ALL = "SELECT NUMERO, NOM, ADRESSE, DESCRIPTION, SITE_WEB, FK_TYPE, FK_VILL FROM RESTAURANTS";
     public static final String QUERY_DELETE = "DELETE FROM RESTAURANTS WHERE NUMERO = ?";
     public static final String QUERY_INSERT = "INSERT INTO RESTAURANTS (NOM, ADRESSE, DESCRIPTION, SITE_WEB, FK_TYPE, FK_VILL) VALUES (?,?, ?, ?, ?, ?) RETURNING NUMERO INTO ?";
@@ -31,11 +31,11 @@ public class RestaurantMapper {
                         resultSet.getString("description"),
                         resultSet.getString("site_web"),
                         resultSet.getString("adresse"),
-                        CityMapper.findByNumero(resultSet.getInt("FK_VILL")),
-                        RestaurantTypeMapper.findByNumero(resultSet.getInt("FK_TYPE")));
+                        CityDAO.findByNumero(resultSet.getInt("FK_VILL")),
+                        RestaurantTypeDAO.findByNumero(resultSet.getInt("FK_TYPE")));
                 //Ajouter les evaluations
-                restaurant.getEvaluations().addAll(BasicEvaluationMapper.findByRestaurantNumero(restaurant));
-                restaurant.getEvaluations().addAll(CompleteEvaluationMapper.findByRestaurantNumero(restaurant));
+                restaurant.getEvaluations().addAll(BasicEvaluationDAO.findByRestaurantNumero(restaurant));
+                restaurant.getEvaluations().addAll(CompleteEvaluationDAO.findByRestaurantNumero(restaurant));
 
 
 
@@ -89,11 +89,11 @@ public class RestaurantMapper {
 
     public static void remove(Restaurant restaurant) {
         for (Evaluation eval : restaurant.getEvaluations()) {
-            GradeMapper.remove(eval.getId());
+            GradeDAO.remove(eval.getId());
         }
 
-        CompleteEvaluationMapper.remove(restaurant);
-        BasicEvaluationMapper.remove(restaurant);
+        CompleteEvaluationDAO.remove(restaurant);
+        BasicEvaluationDAO.remove(restaurant);
 
         try(Connection cnn = DBOracleDriverManager.getConnection();
             PreparedStatement prepareStatement = cnn.prepareStatement(QUERY_DELETE)) {

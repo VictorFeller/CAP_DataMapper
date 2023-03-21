@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
 
-public class EvaluationCriteriaMapper {
+public class EvaluationCriteriaDAO {
     private static final String QUERY_ALL = "SELECT NUMERO, NOM, DESCRIPTION FROM CRITERES_EVALUATION";
     private static final String QUERY_BY_NUMERO = "SELECT NUMERO, NOM, DESCRIPTION FROM CRITERES_EVALUATION WHERE NUMERO = ?";
     public static Set<EvaluationCriteria> findAll() {

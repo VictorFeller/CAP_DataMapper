@@ -8,7 +8,7 @@ import java.sql.*;
 import java.util.HashSet;
 import java.util.Set;
 
-public class BasicEvaluationMapper {
+public class BasicEvaluationDAO {
     public static final String QUERY_BY_RESTAURANT_NUMERO = "SELECT NUMERO, APPRECIATION, DATE_EVAL, ADRESSE_IP, FK_REST FROM LIKES WHERE FK_REST = ?";
     public static final String QUERY_INSERT = "INSERT INTO LIKES (APPRECIATION, DATE_EVAL, ADRESSE_IP, FK_REST) VALUES (?, ?, ?, ?)";
     public static final String QUERY_DELETE = "DELETE FROM LIKES WHERE FK_REST = ?";

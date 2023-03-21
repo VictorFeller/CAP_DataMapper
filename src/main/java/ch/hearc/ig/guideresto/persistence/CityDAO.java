@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
 
-public class CityMapper {
+public class CityDAO {
     private static final String QUERY_ALL = "SELECT NUMERO, CODE_POSTAL, NOM_VILLE FROM VILLES";
     public static final String QUERY_BY_NOM = "SELECT NUMERO, CODE_POSTAL, NOM_VILLE FROM VILLES WHERE NUMERO = ?";
     public static final String QUERY_BY_ZIP_AND_NAME = "SELECT NUMERO, CODE_POSTAL, NOM_VILLE FROM VILLES WHERE CODE_POSTAL = ? AND NOM_VILLE = ?";

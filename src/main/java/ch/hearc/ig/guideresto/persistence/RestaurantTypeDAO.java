@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
 
-public class RestaurantTypeMapper {
+public class RestaurantTypeDAO {
     private static final String QUERY_BY_NUMERO = "SELECT NUMERO, LIBELLE, DESCRIPTION FROM TYPES_GASTRONOMIQUES WHERE NUMERO = ?";
     private static final String QUERY_ALL = "SELECT NUMERO, LIBELLE, DESCRIPTION FROM TYPES_GASTRONOMIQUES";
 

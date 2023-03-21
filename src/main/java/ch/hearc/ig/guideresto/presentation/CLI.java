@@ -97,7 +97,7 @@ public class CLI {
   private void showRestaurantsList() {
     println("Liste des restaurants : ");
 
-    Set<Restaurant> restaurants = RestaurantMapper.findAll();
+    Set<Restaurant> restaurants = RestaurantDAO.findAll();
 
     Optional<Restaurant> maybeRestaurant = pickRestaurant(restaurants);
     // Si l'utilisateur a choisi un restaurant, on l'affiche, sinon on ne fait rien et l'application va réafficher le menu principal
@@ -108,7 +108,7 @@ public class CLI {
     println("Veuillez entrer une partie du nom recherché : ");
     String research = readString();
 
-    Set<Restaurant> restaurants = RestaurantMapper.findAll()
+    Set<Restaurant> restaurants = RestaurantDAO.findAll()
         .stream()
         .filter(r -> r.getName().toLowerCase().contains(research.toLowerCase()))
         .collect(toUnmodifiableSet());
@@ -125,7 +125,7 @@ public class CLI {
     println("Veuillez entrer une partie du nom de la ville désirée : ");
     String research = readString();
 
-    Set<Restaurant> restaurants = RestaurantMapper.findAll()
+    Set<Restaurant> restaurants = RestaurantDAO.findAll()
         .stream()
         .filter(r -> r.getAddress().getCity().getCityName().toUpperCase().contains(research.toUpperCase()))
         .collect(toUnmodifiableSet());
@@ -150,8 +150,8 @@ public class CLI {
       String cityName = readString();
       City city = new City(1, zipCode, cityName);
 
-      CityMapper.insert(city);
-      return CityMapper.findByZipAndName(zipCode, cityName);
+      CityDAO.insert(city);
+      return CityDAO.findByZipAndName(zipCode, cityName);
     }
 
     return searchCityByZipCode(cities, choice).orElseGet(() -> pickCity(cities));
@@ -173,10 +173,10 @@ public class CLI {
   }
 
   private void searchRestaurantByType() {
-    Set<RestaurantType> restaurantTypes = RestaurantTypeMapper.findAll();
+    Set<RestaurantType> restaurantTypes = RestaurantTypeDAO.findAll();
     RestaurantType chosenType = pickRestaurantType(restaurantTypes);
 
-    Set<Restaurant> restaurants = RestaurantMapper.findAll()
+    Set<Restaurant> restaurants = RestaurantDAO.findAll()
         .stream()
         .filter(r -> r.getType().getLabel().equalsIgnoreCase(chosenType.getLabel()))
         .collect(toUnmodifiableSet());
@@ -198,21 +198,21 @@ public class CLI {
     City city;
     do
     { // La sélection d'une ville est obligatoire, donc l'opération se répètera tant qu'aucune ville n'est sélectionnée.
-      Set<City> cities = CityMapper.findAll();
+      Set<City> cities = CityDAO.findAll();
       city = pickCity(cities);
     } while (city == null);
 
     RestaurantType restaurantType;
 
     // La sélection d'un type est obligatoire, donc l'opération se répètera tant qu'aucun type n'est sélectionné.
-    Set<RestaurantType> restaurantTypes = RestaurantTypeMapper.findAll();
+    Set<RestaurantType> restaurantTypes = RestaurantTypeDAO.findAll();
     restaurantType = pickRestaurantType(restaurantTypes);
 
     Restaurant restaurant = new Restaurant(null, name, description, website, street, city,
         restaurantType);
     city.getRestaurants().add(restaurant);
     restaurant.getAddress().setCity(city);
-    int idLastRestaurant = RestaurantMapper.insert(restaurant);
+    int idLastRestaurant = RestaurantDAO.insert(restaurant);
 
     //Mettre à jour l'id du restaurant
     restaurant.setId(idLastRestaurant);
@@ -308,7 +308,7 @@ public class CLI {
 
   private void addBasicEvaluation(Restaurant restaurant, Boolean like) {
     BasicEvaluation eval = new BasicEvaluation(null, LocalDate.now(), restaurant, like, getIpAddress());
-    BasicEvaluationMapper.insert(eval);
+    BasicEvaluationDAO.insert(eval);
     println("Votre vote a été pris en compte !");
   }
 
@@ -331,21 +331,21 @@ public class CLI {
         username);
     restaurant.getEvaluations().add(eval);
 
-    int idLastEval = CompleteEvaluationMapper.insert(eval);
+    int idLastEval = CompleteEvaluationDAO.insert(eval);
 
     //Mettre à jour l'id de l'eval
     eval.setId(idLastEval);
 
     println("Veuillez svp donner une note entre 1 et 5 pour chacun de ces critères : ");
 
-    Set<EvaluationCriteria> evaluationCriterias = EvaluationCriteriaMapper.findAll();
+    Set<EvaluationCriteria> evaluationCriterias = EvaluationCriteriaDAO.findAll();
 
     evaluationCriterias.forEach(currentCriteria -> {
       println(currentCriteria.getName() + " : " + currentCriteria.getDescription());
       Integer note = readInt();
       Grade grade = new Grade(null, note, eval, currentCriteria);
       eval.getGrades().add(grade);
-      GradeMapper.insert(grade);
+      GradeDAO.insert(grade);
     });
 
     println("Votre évaluation a bien été enregistrée, merci !");
@@ -362,7 +362,7 @@ public class CLI {
     restaurant.setWebsite(readString());
     println("Nouveau type de restaurant : ");
 
-    Set<RestaurantType> restaurantTypes = RestaurantTypeMapper.findAll();
+    Set<RestaurantType> restaurantTypes = RestaurantTypeDAO.findAll();
 
     RestaurantType newType = pickRestaurantType(restaurantTypes);
     if (newType != restaurant.getType()) {
@@ -372,7 +372,7 @@ public class CLI {
     }
 
     //Update en DB
-    RestaurantMapper.update(restaurant);
+    RestaurantDAO.update(restaurant);
 
     println("Merci, le restaurant a bien été modifié !");
   }
@@ -385,7 +385,7 @@ public class CLI {
     restaurant.getAddress().setStreet(readString());
 
 
-    Set<City> cities = CityMapper.findAll();
+    Set<City> cities = CityDAO.findAll();
 
     //Retourne une City en fonction d'un code postal existant ou d'une NEW city
     City newCity = pickCity(cities);
@@ -395,7 +395,7 @@ public class CLI {
       restaurant.getAddress().setCity(newCity); //set la ville du restaurant
     }
 
-    RestaurantMapper.update(restaurant);
+    RestaurantDAO.update(restaurant);
 
     println("L'adresse a bien été modifiée ! Merci !");
   }
@@ -406,7 +406,7 @@ public class CLI {
     if ("o".equalsIgnoreCase(choice)) {
       restaurant.getAddress().getCity().getRestaurants().remove(restaurant);
       restaurant.getType().getRestaurants().remove(restaurant);
-      RestaurantMapper.remove(restaurant);
+      RestaurantDAO.remove(restaurant);
       println("Le restaurant a bien été supprimé !");
     }
   }
